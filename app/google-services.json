@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "151961680556",
+    "project_id": "jimenezsemana13",
+    "storage_bucket": "jimenezsemana13.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:151961680556:android:83522d961080048204bd09",
+        "android_client_info": {
+          "package_name": "com.miempresa.jimenez_semana13"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfTYarfnKrvFDitgE1yx90TVXS4fXOYvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
