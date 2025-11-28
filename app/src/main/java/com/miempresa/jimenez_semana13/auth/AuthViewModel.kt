@@ -29,11 +29,11 @@ class AuthViewModel(
         }
     }
 
-    fun register(email: String, password: String) {
+    fun register(nombre: String, email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            val result = repo.register(email, password)
+            val result = repo.register(nombre, email, password)
             _uiState.value = if (result.isSuccess) {
                 _uiState.value.copy(isLoading = false, isSuccess = true)
             } else {
@@ -44,6 +44,7 @@ class AuthViewModel(
             }
         }
     }
+
 
     fun logout() = repo.logout()
 }

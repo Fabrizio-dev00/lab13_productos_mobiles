@@ -119,5 +119,32 @@ fun AppNav(startDestination: String = "login") {
                 onBack = { navController.popBackStack() }
             )
         }
+
+        // PRODUCT FORM (CREATE / EDIT)
+        composable(
+            route = "form?productId={productId}",
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = ""
+                }
+            )
+        ) { entry ->
+            val id = entry.arguments?.getString("productId")
+            val realId = if (id.isNullOrBlank()) null else id
+
+            // 👉 Si es nuevo producto, limpiamos los campos
+            if (realId == null) {
+                productoViewModel.limpiarProductoActual()
+            }
+
+            FormScreen(
+                viewModel = productoViewModel,
+                productId = realId,
+                onFinished = { navController.popBackStack() }
+            )
+        }
+
     }
 }

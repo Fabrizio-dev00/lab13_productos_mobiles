@@ -50,4 +50,9 @@ class ProductoViewModel : ViewModel() {
             cargarProductos()
         }
     }
+
+    // 🔥 IMPORTANTE: limpiar el producto seleccionado
+    fun limpiarProductoActual() {
+        _productoActual.value = null
+    }
 }

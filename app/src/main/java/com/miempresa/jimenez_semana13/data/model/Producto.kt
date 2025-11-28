@@ -7,5 +7,6 @@ data class Producto(
     val precio: Double = 0.0,
     val stock: Int = 0,
     val codigoBarras: String = "",
-    val descripcion: String = ""
+    val descripcion: String = "",
+    val userId: String = ""
 )

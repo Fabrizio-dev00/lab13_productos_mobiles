@@ -3,74 +3,70 @@ package com.miempresa.jimenez_semana13.auth
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     viewModel: AuthViewModel,
     onRegisterSuccess: () -> Unit,
     goToLogin: () -> Unit
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
+    var nombreCompleto by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    if (state.isSuccess) {
-        onRegisterSuccess()
-    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        Text("Crear Cuenta", style = MaterialTheme.typography.headlineSmall)
 
-        Text("Crear Cuenta", style = MaterialTheme.typography.headlineMedium)
-
-        Spacer(Modifier.height(25.dp))
+        OutlinedTextField(
+            value = nombreCompleto,
+            onValueChange = { nombreCompleto = it },
+            label = { Text("Nombre completo") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Correo") },
+            label = { Text("Correo electrónico") },
             modifier = Modifier.fillMaxWidth()
         )
-
-        Spacer(Modifier.height(12.dp))
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(20.dp))
-
         Button(
-            onClick = { viewModel.register(email.trim(), password.trim()) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !state.isLoading
+            onClick = {
+                viewModel.register(nombreCompleto, email, password)
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Registrarse")
         }
 
-        Spacer(Modifier.height(10.dp))
+        if (uiState.error != null) {
+            Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+        }
 
         TextButton(onClick = goToLogin) {
             Text("¿Ya tienes cuenta? Inicia sesión")
         }
+    }
 
-        if (state.error != null) {
-            Spacer(Modifier.height(15.dp))
-            Text(state.error!!, color = MaterialTheme.colorScheme.error)
-        }
+    if (uiState.isSuccess) {
+        onRegisterSuccess()
     }
 }

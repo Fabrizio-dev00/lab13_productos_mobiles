@@ -17,28 +17,16 @@ fun FormScreen(
 ) {
     val productoActual by viewModel.productoActual.collectAsState()
 
-    var nombre by remember { mutableStateOf("") }
-    var categoria by remember { mutableStateOf("") }
-    var precio by remember { mutableStateOf("") }
-    var stock by remember { mutableStateOf("") }
-    var codigo by remember { mutableStateOf("") }
-    var descripcion by remember { mutableStateOf("") }
+    var nombre by remember(productoActual) { mutableStateOf(productoActual?.nombre ?: "") }
+    var categoria by remember(productoActual) { mutableStateOf(productoActual?.categoria ?: "") }
+    var precio by remember(productoActual) { mutableStateOf(productoActual?.precio?.toString() ?: "") }
+    var stock by remember(productoActual) { mutableStateOf(productoActual?.stock?.toString() ?: "") }
+    var codigo by remember(productoActual) { mutableStateOf(productoActual?.codigoBarras ?: "") }
+    var descripcion by remember(productoActual) { mutableStateOf(productoActual?.descripcion ?: "") }
 
-    // Cargar datos si es edición
     LaunchedEffect(productId) {
         if (productId != null) {
             viewModel.cargarProducto(productId)
-        }
-    }
-
-    LaunchedEffect(productoActual) {
-        productoActual?.let {
-            nombre = it.nombre
-            categoria = it.categoria
-            precio = it.precio.toString()
-            stock = it.stock.toString()
-            codigo = it.codigoBarras
-            descripcion = it.descripcion
         }
     }
 

@@ -1,10 +1,12 @@
 package com.miempresa.jimenez_semana13.auth
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 class AuthRepository(
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
 
     suspend fun login(email: String, password: String): Result<Unit> {
@@ -16,9 +18,22 @@ class AuthRepository(
         }
     }
 
-    suspend fun register(email: String, password: String): Result<Unit> {
+    suspend fun register(nombre: String, email: String, password: String): Result<Unit> {
         return try {
-            auth.createUserWithEmailAndPassword(email, password).await()
+            // Crear usuario en Auth
+            val data = auth.createUserWithEmailAndPassword(email, password).await()
+
+            val uid = data.user?.uid ?: throw Exception("No se pudo obtener el UID.")
+
+            // Guardar nombre en Firestore
+            val userData = mapOf(
+                "uid" to uid,
+                "nombre" to nombre,
+                "email" to email
+            )
+
+            db.collection("users").document(uid).set(userData).await()
+
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -29,11 +44,7 @@ class AuthRepository(
         auth.signOut()
     }
 
-    fun getCurrentUserId(): String? {
-        return auth.currentUser?.uid
-    }
+    fun getCurrentUserId(): String? = auth.currentUser?.uid
 
-    fun isUserLoggedIn(): Boolean {
-        return auth.currentUser != null
-    }
+    fun isUserLoggedIn(): Boolean = auth.currentUser != null
 }
