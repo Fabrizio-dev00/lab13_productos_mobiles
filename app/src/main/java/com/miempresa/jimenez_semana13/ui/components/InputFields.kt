@@ -1,33 +1,23 @@
 package com.miempresa.jimenez_semana13.ui.components
 
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun CampoTexto(
-    valor: String,
-    onValorCambio: (String) -> Unit,
-    etiqueta: String,
-    modifier: Modifier = Modifier,
-    habilitado: Boolean = true,
-    tipoTeclado: KeyboardType = KeyboardType.Text,
-    lineasMinimas: Int = 1,
-    textoAyuda: String? = null
+fun SimpleTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier
 ) {
-    OutlinedTextField(
-        value = valor,
-        onValueChange = onValorCambio,
-        label = { Text(etiqueta) },
-        modifier = modifier,
-        enabled = habilitado,
-        keyboardOptions = KeyboardOptions(keyboardType = tipoTeclado),
-        minLines = lineasMinimas,
-        supportingText = if (textoAyuda != null) {
-            { Text(textoAyuda) }
-        } else null
-    )
+    Column(modifier = modifier) {
+        OutlinedTextField(value = value, onValueChange = onValueChange, label = { Text(label) })
+        Spacer(modifier = Modifier.height(8.dp))
+    }
 }

@@ -1,36 +1,33 @@
 package com.miempresa.jimenez_semana13.data.repository
 
-import com.miempresa.jimenez_semana13.data.local.Producto
-import com.miempresa.jimenez_semana13.data.local.ProductoDao
-import kotlinx.coroutines.flow.Flow
+import com.google.firebase.firestore.FirebaseFirestore
+import com.miempresa.jimenez_semana13.data.model.Producto
+import kotlinx.coroutines.tasks.await
 
-class ProductoRepository(private val productoDao: ProductoDao) {
+class ProductoRepository {
 
-    fun getAllProductos(): Flow<List<Producto>> {
-        return productoDao.getAllProductos()
+    private val db = FirebaseFirestore.getInstance()
+    private val productosRef = db.collection("productos")
+
+    suspend fun agregarProducto(producto: Producto) {
+        val docRef = productosRef.document()
+        val productoConId = producto.copy(id = docRef.id)
+        docRef.set(productoConId).await()
     }
 
-    fun buscarProductos(busqueda: String): Flow<List<Producto>> {
-        return productoDao.buscarProductos(busqueda)
+    suspend fun actualizarProducto(producto: Producto) {
+        productosRef.document(producto.id).set(producto).await()
     }
 
-    suspend fun insertProducto(producto: Producto) {
-        productoDao.insertProducto(producto)
+    suspend fun eliminarProducto(id: String) {
+        productosRef.document(id).delete().await()
     }
 
-    suspend fun updateProducto(producto: Producto) {
-        productoDao.updateProducto(producto)
+    suspend fun obtenerProductos(): List<Producto> {
+        return productosRef.get().await().toObjects(Producto::class.java)
     }
 
-    suspend fun deleteProducto(producto: Producto) {
-        productoDao.deleteProducto(producto)
-    }
-
-    suspend fun getProductoById(id: Int): Producto? {
-        return productoDao.getProductoById(id)
-    }
-
-    suspend fun verificarCodigoUnico(codigo: String): Boolean {
-        return productoDao.getProductoByCodigo(codigo) == null
+    suspend fun obtenerProducto(id: String): Producto? {
+        return productosRef.document(id).get().await().toObject(Producto::class.java)
     }
 }
